@@ -51,5 +51,7 @@ git clone https://github.com/MedMdhaffar/darna-navigator.git
 cd darne-navigator
 docker-compose up --build
 ```
+then open the browser and type :
+http://localhost:5173
 
 
