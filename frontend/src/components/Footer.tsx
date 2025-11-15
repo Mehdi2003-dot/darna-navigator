@@ -77,11 +77,11 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li className="flex items-center space-x-2 text-muted-foreground">
                 <Mail className="h-4 w-4" />
-                <span>contact@darnatunisia.tn</span>
+                <span>mohamed.mdhaffar@supcom.tn</span>
               </li>
               <li className="flex items-center space-x-2 text-muted-foreground">
                 <Phone className="h-4 w-4" />
-                <span>+216 71 234 567</span>
+                <span>+216 99 655 775</span>
               </li>
               <li className="flex items-center space-x-2 text-muted-foreground">
                 <MapPin className="h-4 w-4" />
@@ -92,7 +92,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>© 2024 Darna Tunisia. Tous droits réservés.</p>
+          <p>© 2025 Darna Tunisia. Tous droits réservés.</p>
         </div>
       </div>
     </footer>

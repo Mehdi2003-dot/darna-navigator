@@ -5,6 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Destinations from "./pages/Destinations";
+import Tunis from "./pages/Tunis";
+import Sousse from "./pages/Sousse";
+import Tozeur from "./pages/Tozeur";
+import Kairouan from "./pages/Kairouan";
 import Djerba from "./pages/Djerba";
 import Gastronomie from "./pages/Gastronomie";
 import Evenements from "./pages/Evenements";
@@ -27,7 +31,10 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/destinations" element={<Destinations />} />
           <Route path="/destinations/djerba" element={<Djerba />} />
-          <Route path="/destinations/:city" element={<Djerba />} />
+          <Route path="/destinations/tunis" element={<Tunis />} />
+          <Route path="/destinations/sousse" element={<Sousse />} />
+          <Route path="/destinations/tozeur" element={<Tozeur />} />
+          <Route path="/destinations/kairouan" element={<Kairouan />} />
           <Route path="/gastronomie" element={<Gastronomie />} />
           <Route path="/evenements" element={<Evenements />} />
           <Route path="/profil" element={<Profil />} />

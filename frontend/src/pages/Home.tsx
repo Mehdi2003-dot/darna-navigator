@@ -128,12 +128,12 @@ const Home = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <img
-                  src="/placeholder.svg"
+                  src="/mechouia_tunisienne.webp"
                   alt="Cuisine tunisienne"
                   className="w-full h-48 object-cover rounded-lg"
                 />
                 <img
-                  src="/placeholder.svg"
+                  src="/Original_3996_makroudhs-patisseries-dattes-tunisie_0.avif"
                   alt="Pâtisserie tunisienne"
                   className="w-full h-48 object-cover rounded-lg"
                 />
