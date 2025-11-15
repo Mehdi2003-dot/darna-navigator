@@ -47,7 +47,7 @@ darna-navigator/
 ### To use the website
 
 ```c
-git clone https://github.com/MedMdhaffar/darna-navigator/
+git clone https://github.com/MedMdhaffar/darna-navigator.git
 cd darne-navigator
 docker-compose up --build
 ```
