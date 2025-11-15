@@ -1,5 +1,5 @@
 import { Heart, Calendar, Settings, LogOut, MapPin, UtensilsCrossed } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate , useLocation} from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,16 +7,15 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
+import { useState, useEffect } from "react";  // <-- FIXED
+
 const Profil = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const profileUser = location.state?.profileUser;
+  const [user, setUser] = useState<any>(null);
 
-  // Simulation de données utilisateur
-  const user = {
-    name: "Utilisateur",
-    email: "utilisateur@darnatunisia.tn",
-    memberSince: "Mars 2024",
-  };
-
+  // ✅ Add these arrays
   const favorites = [
     { type: "destination", name: "Djerba", slug: "djerba" },
     { type: "dish", name: "Couscous" },
@@ -26,6 +25,41 @@ const Profil = () => {
     { name: "Festival International de Carthage", date: "15-25 Juillet 2024" },
   ];
 
+  useEffect(() => {
+    const storedTokens = localStorage.getItem("authTokens");
+
+    if (!storedTokens && !profileUser) {
+      navigate("/login");
+      return;
+    }
+
+    if (profileUser) {
+      setUser({
+        username: profileUser.username,
+        email: profileUser.email,
+        memberSince: "Mars 2024",
+      });
+      return;
+    }
+
+    if (storedTokens && !profileUser) {
+      try {
+        const parsedTokens = JSON.parse(storedTokens);
+        const decoded = JSON.parse(atob(parsedTokens.access.split(".")[1]));
+
+        setUser({
+          username: decoded.username,
+          email: decoded.email,
+          memberSince: "Mars 2024",
+        });
+      } catch (err) {
+        console.error("Invalid token", err);
+        navigate("/login");
+      }
+    }
+  }, [profileUser, navigate]);  
+
+  if (!user) return null;
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -38,23 +72,21 @@ const Profil = () => {
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                 <Avatar className="h-24 w-24">
                   <AvatarFallback className="text-2xl bg-primary text-primary-foreground">
-                    {user.name.charAt(0)}
+                  {user.username.charAt(0)}
                   </AvatarFallback>
+
                 </Avatar>
                 
                 <div className="flex-1">
-                  <h1 className="text-3xl font-bold mb-2">{user.name}</h1>
-                  <p className="text-muted-foreground mb-1">{user.email}</p>
+                  <h1 className="text-3xl">{user.username}</h1>
+
+                  <p>{user.email}</p>
                   <p className="text-sm text-muted-foreground">
                     Membre depuis {user.memberSince}
                   </p>
                 </div>
 
                 <div className="flex gap-2 w-full md:w-auto">
-                  <Button variant="outline" className="flex-1 md:flex-none">
-                    <Settings className="h-4 w-4 mr-2" />
-                    Paramètres
-                  </Button>
                   <Link to="/logout" className="flex-1 md:flex-none">
                     <Button variant="outline" className="w-full">
                       <LogOut className="h-4 w-4 mr-2" />
@@ -120,7 +152,7 @@ const Profil = () => {
                       </Link>
                     </div>
                   )}
-                </CardContent>
+                </CardContent>  
               </Card>
 
               <Card>

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,21 +7,87 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { set } from "date-fns";
+
+interface AuthTokens {
+  access: string;
+  refresh: string;
+}
+
+interface ProfileUser {
+  username: string;
+  email: string;
+}
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [authTokens, setAuthTokens] = useState<AuthTokens | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [profileUser, setProfileUser] = useState<ProfileUser | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ✅ useEffect must be HERE — top level of component
+  // useEffect(() => {
+  //   console.log("Updated authTokens:", authTokens);
+  // }, [authTokens]);
+
+  // useEffect(() => {
+  //   console.log("Updated user:", user);
+  //   console.log("Name from token:", user?.username);
+  //   console.log("Email from token:", user?.email);
+
+
+  // }, [user]);
+
+  useEffect(() => {
+    console.log("Updated profileUser:", profileUser);
+  }, [profileUser]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Simulation de connexion
-    if (email && password) {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8000/accounts/signin/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.toLowerCase().trim(), password }),
+      });
+
+      const data = await response.json();
+
+      if (data.tokens?.access && data.tokens?.refresh) {
+
+      const decoded: any = jwtDecode(data.tokens.access);
+
+      const decodedUser = {
+        username: decoded.username,
+        email: decoded.email,
+      };
+
+      setProfileUser(decodedUser);
+
+      localStorage.setItem("authTokens", JSON.stringify(data.tokens));
+
       toast.success("Connexion réussie !");
-      setTimeout(() => navigate("/profil"), 1000);
-    } else {
-      toast.error("Veuillez remplir tous les champs");
+      setEmail("");
+      setPassword("");
+
+      setTimeout(() => {
+        navigate("/profil", {
+          state: { profileUser: decodedUser },
+        });
+      }, 1000);
+      } else {
+        toast.error("Email ou mot de passe incorrect");
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.message || "Erreur réseau ou identifiants invalides");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -36,9 +103,7 @@ const Login = () => {
           </Link>
           <div>
             <CardTitle className="text-2xl">Connexion</CardTitle>
-            <CardDescription>
-              Connectez-vous pour accéder à votre espace personnel
-            </CardDescription>
+            <CardDescription>Connectez-vous pour accéder à votre espace personnel</CardDescription>
           </div>
         </CardHeader>
         <CardContent>
@@ -65,8 +130,8 @@ const Login = () => {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" size="lg">
-              Se connecter
+            <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+              {isLoading ? "Connexion..." : "Se connecter"}
             </Button>
           </form>
 
@@ -91,3 +156,28 @@ const Login = () => {
 };
 
 export default Login;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

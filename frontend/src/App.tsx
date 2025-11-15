@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Logout from "./pages/Logout";
 import NotFound from "./pages/NotFound";
+import Verify from "./pages/Verify";
 
 const queryClient = new QueryClient();
 
@@ -32,8 +33,8 @@ const App = () => (
           <Route path="/profil" element={<Profil />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/verify" element={<Verify />} />
           <Route path="/logout" element={<Logout />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

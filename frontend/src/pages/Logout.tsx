@@ -3,18 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { Heart, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "react-hot-toast";
+
 
 const Logout = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Simulation de déconnexion après 2 secondes
-    const timer = setTimeout(() => {
-      navigate("/");
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [navigate]);
+  localStorage.removeItem("authTokens");
+  toast.success("You have been logged out");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/10 p-4">

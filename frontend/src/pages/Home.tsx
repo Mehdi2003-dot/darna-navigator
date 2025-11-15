@@ -52,7 +52,6 @@ const Home = () => {
       <Header />
       
       <main className="flex-1">
-        {/* Hero Section */}
         <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0">
             <img

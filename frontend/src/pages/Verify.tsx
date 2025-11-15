@@ -7,15 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 
-const Signup = () => {
+const Verify = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    code: "",
   });
 
+  // Update state when user types
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -23,28 +24,45 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Handle signup
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validation
-    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
+
+    // Basic validation
+    if (!formData.name || !formData.code) {
       toast.error("Veuillez remplir tous les champs");
       return;
     }
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:8000/accounts/verify/", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          username: formData.name.trim(),
+          code: formData.code,
+        }),
+      });
 
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Les mots de passe ne correspondent pas");
-      return;
-    }
+      const data = await response.json();
 
-    if (formData.password.length < 6) {
-      toast.error("Le mot de passe doit contenir au moins 6 caractères");
-      return;
-    }
+      if (!response.ok) {
+        toast.error(data.error || "Code éronné");
+        return;
+      }
 
-    // Simulation d'inscription
-    toast.success("Compte créé avec succès !");
-    setTimeout(() => navigate("/login"), 1000);
+      toast.success("Le compte est crée avec succée");
+      setFormData({ name: "", code: "" });
+
+      // Redirect to verification page
+      setTimeout(() => navigate("/login"), 1000);
+
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Erreur réseau. Réessayez.");
+    } finally {
+    setLoading(false);
+  }
   };
 
   return (
@@ -58,60 +76,43 @@ const Signup = () => {
             </span>
           </Link>
           <div>
-            <CardTitle className="text-2xl">Créer un compte</CardTitle>
-            <CardDescription>
-              Rejoignez la communauté Darna Tunisia
-            </CardDescription>
+            <CardTitle className="text-2xl">Validation du compte</CardTitle>
+            <CardDescription>Rejoignez la communauté Darna Tunisia</CardDescription>
           </div>
         </CardHeader>
+
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Name */}
             <div className="space-y-2">
-              <Label htmlFor="name">Nom complet</Label>
-              <Input
+              <Label htmlFor="code">name</Label>
+                <Input
                 id="name"
                 type="text"
-                placeholder="Votre nom"
+                placeholder="Username"
                 value={formData.name}
                 onChange={handleChange}
                 required
-              />
+                />
             </div>
+
+            {/* Code */}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="code">Code</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="votre@email.com"
-                value={formData.email}
+                id="code"
+                type="number"
+                placeholder="code"
+                value={formData.code}
                 onChange={handleChange}
                 required
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Au moins 6 caractères"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirmez votre mot de passe"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" size="lg">
-              Créer mon compte
+
+            
+
+            <Button type="submit" className="w-full" size="lg" disabled={loading}>
+            {loading ? "Vérification..." : "Verifier le compte"}
             </Button>
           </form>
 
@@ -135,4 +136,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Verify;
