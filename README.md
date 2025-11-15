@@ -25,19 +25,52 @@
 - **Routing & State Management**: React Router, Context API  
 - **UI & Notifications**: shadcn/ui components, Sonner, Lucide React Icons  
 
----
-
 ## 📂 Project Structure
 
 ```bash
 darna-navigator/
-├─ backend/ # Django backend (APIs, models, admin)
-├─ frontend/ # React frontend (pages, components, assets)
-├─ .dockerignore # Docker ignore file
-├─ .gitignore # Git ignore file
-└─ docker-compose.yml # Docker setup for frontend + backend
+├─ backend/                    # Django REST Framework API
+│  ├─ accounts/               # User authentication & profiles
+│  │  ├─ models.py           # User data structure
+│  │  ├─ serializers.py       # Data validation & API responses
+│  │  └─ views.py            # Auth endpoints (login, signup, profile)
+│  ├─ settings.py            # Django configuration
+│  └─ requirements.txt        # Python dependencies
+├─ frontend/                   # React + TypeScript application
+│  ├─ pages/                 # Main page components
+│  │  ├─ Home.tsx            # Landing page
+│  │  ├─ Destinations.tsx    # City explorer
+│  │  ├─ Gastronomie.tsx     # Food & cuisine
+│  │  ├─ Evenements.tsx      # Events calendar
+│  │  └─ [City].tsx          # Individual city guides (Tunis, Sousse, etc.)
+│  ├─ components/            # Reusable UI components
+│  │  ├─ CityCard.tsx        # City information card
+│  │  ├─ DishCard.tsx        # Food item card
+│  │  ├─ EventCard.tsx       # Event information card
+│  │  ├─ Header.tsx          # Navigation bar
+│  │  ├─ Footer.tsx          # Footer layout
+│  │  └─ ui/                 # shadcn/ui library (buttons, dialogs, forms, etc.)
+│  ├─ hooks/                 # Custom React hooks
+│  │  ├─ use-mobile.tsx      # Mobile detection
+│  │  └─ use-toast.ts        # Toast notifications
+│  ├─ lib/                   # Utility functions
+│  ├─ vite.config.ts         # Build configuration
+│  └─ tailwind.config.ts     # CSS theming
+└─ docker-compose.yml        # Docker setup for frontend + backend
 ```
 
+### Backend Overview
+
+- **Django REST Framework** handles all API logic and data management
+- `accounts/` manages user authentication, profiles, and login/signup endpoints
+
+ ### Frontend Overview
+
+- **React + TypeScript** provides the interactive UI
+- `pages/` contains full page routes (home, city guides, events, etc.)
+- `components/` has reusable UI elements (cards, headers, footers)
+- `ui/` contains pre-built shadcn/ui components for consistent styling
+- `hooks/` provides custom logic for mobile detection and notifications
 
 ---
 
